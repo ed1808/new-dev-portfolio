@@ -33,9 +33,6 @@ const projects: Project[] = results;
 	{
 		projects.map((project) => {
 			const { id, project_image, name } = project;
-			const transitionName = name
-				.replaceAll(/\s/g, '-')
-				.toLocaleLowerCase();
 			return (
 				<a
 					href={`/projects/project-${id}`}
