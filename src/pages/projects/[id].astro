@@ -1,0 +1,99 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { SERVER_API_URL } from 'astro:env/server';
+import { Image } from 'astro:assets';
+
+interface Project {
+	id: number;
+	technologies: string[];
+	name: string;
+	description: string;
+	url: string;
+	project_status: string;
+	project_image: string;
+}
+
+const { id } = Astro.params;
+const projectIdNumber = id?.split('-')[1];
+
+if (!projectIdNumber) {
+	return Astro.redirect('/404');
+}
+
+const response = await fetch(`${SERVER_API_URL}${projectIdNumber}/`);
+const result: Project = await response.json();
+const {
+	id: projectId,
+	technologies,
+	name,
+	description,
+	url,
+	project_status,
+	project_image,
+} = result;
+
+const transitionName = name.replaceAll(/\s/g, '-').toLocaleLowerCase();
+
+export const prerender = false;
+---
+
+<Layout title="">
+	<main
+		class="px-8 py-4 sm:py-0 sm:px-0 h-[calc(100dvh-146px)] lg:flex lg:flex-row gap-5 lg:gap-28 overflow-y-auto"
+	>
+		<aside class="relative sm:h-[calc(100dvh-146px)] w-full lg:w-1/2">
+			<Image
+				src={project_image}
+				alt={`${name} image`}
+				class="max-h-full object-cover"
+				inferSize={true}
+				transition:name={`${transitionName}-${projectId}-image`}
+			/>
+			<div
+				class="absolute top-0 w-full h-full bg-gradient-to-b lg:bg-gradient-to-r from-transparent via-transparent to-[#0d0d0d]"
+			>
+			</div>
+		</aside>
+		<section
+			class="py-4 w-full h-[calc(100dvh-144px)] lg:w-1/2 lg:pl-10 prose prose-invert overflow-y-auto"
+		>
+			<h1>{name}</h1>
+			<p>{description}</p>
+			<h2>Built with:</h2>
+			<ul>
+				{
+					technologies.map((tech) => {
+						return <li>{tech}</li>;
+					})
+				}
+			</ul>
+			<div class="flex items-center gap-3">
+				<a
+					href="/projects"
+					class="flex items-center gap-2 px-5 py-3 hover:bg-[#FF0090] transition-colors ease-linear no-underline"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						><path
+							fill="currentColor"
+							d="M20 11v2H8v2H6v-2H4v-2h2V9h2v2zM10 7H8v2h2zm0 0h2V5h-2zm0 10H8v-2h2zm0 0h2v2h-2z"
+						></path></svg
+					>
+					<span>Back to projects</span>
+				</a>
+				<a
+					target="_blank"
+					rel="noopener noreferrer"
+					href={url}
+					class={project_status === 'unavailable'
+						? 'hidden'
+						: 'px-5 py-3 bg-[#E000FF] hover:bg-[#8D00FF] transition-colors ease-linear no-underline'}
+					>Project link</a
+				>
+			</div>
+		</section>
+	</main>
+</Layout>

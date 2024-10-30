@@ -1,0 +1,74 @@
+<form class="space-y-3">
+	<div class="flex flex-col gap-3">
+		<label for="name">Name</label>
+		<input
+			type="text"
+			class="bg-[#121417] border border-gray-800"
+			id="name"
+			name="name"
+			placeholder="John Doe"
+			required
+			autocomplete="off"
+		/>
+	</div>
+	<div class="flex flex-col gap-3">
+		<label for="email">Email</label>
+		<input
+			type="email"
+			class="bg-[#121417] border border-gray-800"
+			id="email"
+			name="email"
+			placeholder="johndoe@example.com"
+			required
+			autocomplete="off"
+		/>
+	</div>
+	<div class="flex flex-col gap-3">
+		<label for="message">Message</label>
+		<textarea
+			class="resize-none h-40 bg-[#121417] border border-gray-800"
+			id="message"
+			name="message"
+			placeholder="Your site looks great!"
+			required></textarea>
+	</div>
+	<button
+		type="submit"
+		class="w-full lg:w-auto px-5 py-3 bg-[#E000FF] hover:bg-[#8D00FF] transition-colors ease-linear"
+		>Send message</button
+	>
+</form>
+<script>
+	const form = document.querySelector('form');
+
+	if (form) {
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			const formData = new FormData(form);
+
+            const data = Object.fromEntries(formData.entries());
+
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            }
+
+            fetch('http://localhost:8000/api/contact/', requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'success') {
+                        alert('Thanks for your message!');
+                        form.reset();
+                    } else {
+                        alert('Error sending message');
+                    }
+                })
+                .catch(_ => {
+                    alert('Something went wrong');
+                });
+		});
+	}
+</script>

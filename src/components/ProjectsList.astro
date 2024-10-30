@@ -1,0 +1,128 @@
+---
+import { Image } from 'astro:assets';
+
+interface Project {
+	id: number;
+	technologies: string[];
+	name: string;
+	description: string;
+	url: string;
+	project_status: string;
+	project_image: string;
+}
+
+const currentPath = Astro.url.pathname;
+const offset = Number(Astro.url.searchParams.get('offset')) ?? 0;
+
+const fetchProjects = async (offset: number) => {
+	const url = `http://localhost:8000/api/projects/?limit=10&offset=${offset}`;
+	const response = await fetch(url);
+	const result = await response.json();
+	return result;
+};
+
+const response = await fetchProjects(offset);
+const { next, previous, results } = response;
+
+const projects: Project[] = results;
+---
+
+<div
+	class="h-[calc(100dvh-196px)] grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 mb-4 overflow-y-auto"
+>
+	{
+		projects.map((project) => {
+			const { id, project_image, name } = project;
+			const transitionName = name
+				.replaceAll(/\s/g, '-')
+				.toLocaleLowerCase();
+			return (
+				<a
+					href={`/projects/project-${id}`}
+					class="block mx-auto sm:m-0 h-48 w-64 hover:scale-[1.025] bg-[#8D00FF] hover:bg-[#FFEA00] hover:text-[#0d0d0d] cursor-pointer transition-all ease-linear"
+				>
+					<Image
+						src={project_image}
+						alt={name}
+						class="max-h-full aspect-video"
+						inferSize={true}
+					/>
+					<div class="py-2 pl-4 w-full">
+						<h3 class="text-xl">{name}</h3>
+					</div>
+				</a>
+			);
+		})
+	}
+</div>
+<div class="flex items-center gap-8 justify-end">
+	<a
+		href={`${currentPath}?offset=${offset > 0 ? offset - 10 : 0}`}
+		class={previous
+			? 'link relative py-3 flex items-center justify-center gap-2 hover:text-[#00FFFF] transition-colors ease-linear'
+			: 'hidden'}
+	>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			><path
+				fill="currentColor"
+				d="M16 5v2h-2V5zm-4 4V7h2v2zm-2 2V9h2v2zm0 2H8v-2h2zm2 2v-2h-2v2zm0 0h2v2h-2zm4 4v-2h-2v2z"
+			></path></svg
+		>
+		<span>Prev.</span>
+	</a>
+	<a
+		href={`${currentPath}?offset=${offset + 10}`}
+		class={next
+			? 'link relative py-3 flex items-center justify-center gap-2 hover:text-[#00FFFF] transition-colors ease-linear'
+			: 'hidden'}
+	>
+		<span>Next</span>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			><path
+				fill="currentColor"
+				d="M8 5v2h2V5zm4 4V7h-2v2zm2 2V9h-2v2zm0 2h2v-2h-2zm-2 2v-2h2v2zm0 0h-2v2h2zm-4 4v-2h2v2z"
+			></path></svg
+		>
+	</a>
+</div>
+<style>
+	.link::before {
+		content: '';
+		@apply absolute w-full bottom-0 left-0 border-b-2 border-b-[#00FFFF];
+		animation: out 150ms linear forwards;
+		transform-origin: right;
+	}
+
+	.link:hover::before {
+		animation: in 150ms linear forwards;
+		transform-origin: left;
+	}
+
+	@keyframes in {
+		from {
+			transform: scaleX(0);
+		}
+
+		to {
+			transform: scaleX(1);
+		}
+	}
+
+	@keyframes out {
+		from {
+			transform: scaleX(1);
+		}
+
+		to {
+			transform: scaleX(0);
+		}
+	}
+</style>

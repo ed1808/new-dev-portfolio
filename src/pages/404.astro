@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+import cover from '../../public/cover1.jpg';
+import { Image } from 'astro:assets';
+
+export const prerender = true;
+---
+
+<Layout title="404">
+	<main class="w-full overflow-y-auto flex justify-center pointer-events-none">
+		<div class="relative flex items-center h-[calc(100dvh-144px)] w-1/2 pointer-events-none"> 
+			<Image src={cover} alt="Banner" class="max-h-full object-cover pointer-events-none" />
+			<div
+				class="absolute grid place-content-center inset-0 w-full h-full bg-[#0d0d0d] bg-opacity-60 pointer-events-none"
+			>
+                <div class="prose prose-invert text-center text-[#FFEA00] pointer-events-none">
+                    <h1 class="text-[#FFEA00]">404</h1>
+                    <p>Page not found</p>
+                </div>
+			</div>
+		</div>
+	</main>
+</Layout>

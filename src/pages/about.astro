@@ -1,0 +1,104 @@
+---
+import Layout from '../layouts/Layout.astro';
+import profilePic from '../../public/profile-pic.png';
+import angularLogo from '../../public/angular-logo.png';
+import astroLogo from '../../public/astro-logo.png';
+import csharpLogo from '../../public/csharp-logo.png';
+import cssLogo from '../../public/css-logo.png';
+import djangoLogo from '../../public/django-logo.png';
+import htmlLogo from '../../public/html-logo.png';
+import jsLogo from '../../public/js-logo.png';
+import mariaDbLogo from '../../public/mariadb-logo.png';
+import nodeLogo from '../../public/node-logo.png';
+import pythonLogo from '../../public/python-logo.png';
+import phpLogo from '../../public/php-logo.png';
+import tailwindLogo from '../../public/tailwindcss-logo.png';
+import { Image } from 'astro:assets';
+
+const technologies = [
+	angularLogo,
+	astroLogo,
+	csharpLogo,
+	cssLogo,
+	djangoLogo,
+	htmlLogo,
+	jsLogo,
+	mariaDbLogo,
+	nodeLogo,
+	pythonLogo,
+	phpLogo,
+	tailwindLogo,
+];
+
+export const prerender = true;
+---
+
+<Layout title="About">
+	<main
+		class="w-full overflow-y-auto flex flex-col lg:flex-row gap-5 lg:gap-28"
+	>
+		<div
+			class="relative flex items-center sm:h-[calc(100dvh-144px)] w-full lg:w-1/2"
+		>
+			<Image
+				src={profilePic}
+				alt="Edward Rodríguez profile picture"
+				class="max-h-full object-cover"
+			/>
+			<div
+				class="absolute top-0 w-full h-full bg-gradient-to-b lg:bg-gradient-to-r from-transparent via-transparent to-[#0d0d0d]"
+			>
+			</div>
+		</div>
+		<section
+			class="px-8 sm:px-0 py-4 w-full h-[calc(100dvh-144px)] lg:w-1/2 lg:pl-10 prose prose-invert overflow-y-auto"
+		>
+			<h1>About me</h1>
+			<p>
+				Hi! I'm Edward. I'm a Full-stack software developer from
+				Colombia with <span id="experienceTime">-</span> years of experience,
+				specialized in creating robust solutions for the dealer after-sales
+				sector. With a main focus on PHP for backend and frontend experience
+				with HTML, CSS and JavaScript, I combine skills in developing modules
+				aimed at customer management and after-sales services, especially
+				in CRMs/BPMs. I have designed and implemented customized solutions,
+				such as a time control module for workshops and a spare parts quoting
+				tool, optimizing key processes at dealerships.
+			</p>
+			<p>
+				In addition to my experience in SQL and relational databases, I
+				apply a continuous improvement approach to learning unit testing
+				to ensure reliable code in personal projects. In parallel, my
+				curiosity has led me to explore IoT technology and develop
+				applications that integrate innovation and efficiency.
+			</p>
+			<h2>Technologies</h2>
+			<p>
+				There are some technologies that I have experience with, but I
+				am always looking for new challenges and opportunities to learn
+				and grow. Some of the technologies I have worked with or I'm
+				currently learning are:
+			</p>
+			<div class="grid grid-cols-3 gap-3">
+				{
+					technologies.map((technology) => (
+						<Image
+							src={technology}
+							alt="Technology logo"
+							class="w-16 h-16 object-contain"
+						/>
+					))
+				}
+			</div>
+		</section>
+	</main>
+	<script>
+		const experienceTime = document.querySelector('#experienceTime');
+
+		if (experienceTime) {
+			experienceTime.textContent = (
+				new Date().getFullYear() - 2021
+			).toString();
+		}
+	</script>
+</Layout>

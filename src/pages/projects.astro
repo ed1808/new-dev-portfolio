@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectsList from '../components/ProjectsList.astro';
+
+export const prerender = false;
+---
+
+<Layout title="Projects">
+	<main class="px-8 py-4 sm:px-0 container mx-auto overflow-y-auto">
+		<ProjectsList client:load />
+	</main>
+</Layout>
